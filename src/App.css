@@ -1,3 +1,12 @@
+
+
+:root {
+  --red: #dd4470;
+  --pink: #fe72a9;
+  --green:#c6df76;
+  --tan:#ffe3b3;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -35,4 +44,30 @@ border-radius: 20px;
   margin-left: .5%;
   width: 5rem;
   padding: .5%;
+}
+.profile-container{
+  border: 1px solid;
+  padding: 1%;
+}
+.personal-info >* {
+  width: 15%;
+}
+.personal-info img {
+  border-radius: 50%;
+}
+.personal-info p {
+  text-align: center;
+}
+.personal-info a {
+  display: block;
+  text-align: center;
+  border: 1px solid;
+}
+.personal-info h3{
+  font-size: 1.6rem;
+  text-align: center;
+}
+.personal-info h4 {
+  font-size: 1.3rem;
+  text-align: center;
 }

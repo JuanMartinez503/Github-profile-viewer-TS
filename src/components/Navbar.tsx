@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Profile from "./Profile";
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
@@ -9,9 +10,11 @@ export default function Navbar() {
     try {
         const res = await fetch(`https://api.github.com/users/${query}`)
         if(res.ok){
+
         const data = await res.json()
         console.log(data);
-            setQuery('')
+            setQuery(data)
+        
         } else {
             setUserNotFound("UserName was not Found")
             setTimeout(()=>{
@@ -23,6 +26,8 @@ export default function Navbar() {
         console.log(err);
         
     }
+  
+
   };
   return (
     <div>
@@ -39,6 +44,7 @@ export default function Navbar() {
             <p className="alert alert-danger text-center">{userNotFound}</p>
         )}
       </header>
+      <Profile query={query}/>
     </div>
   );
 }
