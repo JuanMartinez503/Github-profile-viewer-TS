@@ -1,49 +1,48 @@
+
 import React, { useState, useEffect } from "react";
+import Aos from "aos";
 import Profile from "./Profile";
+import "aos/dist/aos.css";
 
 export default function Navbar() {
-  const [query, setQuery] = useState<string | null>(null);
-  const [userInfo, setUserInfo]=useState('')
-  const [userNotFound, setUserNotFound] = useState("");
-  const [userRepos, setUserRepos] = useState([]);
+  const [query, setQuery] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userNotFound, setUserNotFound] = useState<string>("");
+  const [userRepos, setUserRepos] = useState<string[]>([]);
   const [pastSearches, setPastSearches] = useState<string[]>([]);
   const [showPastSearches, setShowPastSearches] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState<string>("");
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Load past searches from local storage when the component mounts
   useEffect(() => {
     const storedSearches = localStorage.getItem("pastSearches");
     if (storedSearches) {
       setPastSearches(JSON.parse(storedSearches));
     }
+    Aos.init({ duration: 500, delay: 100 });
   }, []);
 
-  // Function to handle search
-  const handleSearchQuery = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchQuery = async (searchQuery: string) => {
+    setLoading(true); // Set loading to true
     try {
-      const res = await fetch(`https://api.github.com/users/${query}`);
+      const res: Response = await fetch(`https://api.github.com/users/${searchQuery}`);
       if (res.ok) {
         const data = await res.json();
-        const username = data.login; // Get the username
 
-        // Set the query state to the username
-        setUserInfo(data)
-        setQuery(username);
+        const username = data.login;
 
-        // Check if the query is unique
         if (!pastSearches.includes(username)) {
-          // Save the username to past searches if it's unique
           setPastSearches((prevSearches) => [username, ...prevSearches]);
-          localStorage.setItem(
-            "pastSearches",
-            JSON.stringify([username, ...pastSearches])
-          );
+          localStorage.setItem("pastSearches", JSON.stringify([username, ...pastSearches]));
         }
 
-        const resRepos = await fetch(`https://api.github.com/users/${username}/repos`);
+        const resRepos: Response = await fetch(`https://api.github.com/users/${username}/repos`);
         const returnedRepos = await resRepos.json();
         setUserRepos(returnedRepos);
+        setUserInfo(data);
+        setUserNotFound("");
       } else {
+        setUserInfo(null);
         setUserNotFound("Username was not found");
         setTimeout(() => {
           setUserNotFound("");
@@ -51,15 +50,29 @@ export default function Navbar() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false); // Set loading to false when done
     }
   };
 
-  // Function to delete a past search
   const deletePastSearch = (index: number) => {
-    const updatedSearches = [...pastSearches];
+    const updatedSearches: string[] = [...pastSearches];
     updatedSearches.splice(index, 1);
     setPastSearches(updatedSearches);
     localStorage.setItem("pastSearches", JSON.stringify(updatedSearches));
+    setDeleteMessage("Delete was successful");
+    setTimeout(() => {
+      setDeleteMessage("");
+    }, 1000);
+  };
+
+  const toggleShowPastSearches = () => {
+    setShowPastSearches((prevShowPastSearches) => !prevShowPastSearches);
+  };
+
+  const performPastSearch = (searchValue: string) => {
+    setQuery(searchValue);
+    handleSearchQuery(searchValue);
   };
 
   return (
@@ -69,38 +82,67 @@ export default function Navbar() {
           <img src="/githublogo.png" alt="A logo for GitHub" />
           <h2>Search for a profile</h2>
         </div>
-        <form className="search" onSubmit={handleSearchQuery}>
+        <form
+          className="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearchQuery(query);
+          }}
+        >
           <input
             type="text"
             placeholder="Username..."
-            value={query || ""} // Display the query if it's not null
+            value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button type="submit">Search</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Searching..." : "Search"}
+          </button>
         </form>
         {userNotFound && (
           <p className="alert alert-danger text-center">{userNotFound}</p>
         )}
         {pastSearches.length > 0 && (
-          <div>
+          <div className="past-searches">
             <h3>Past Searches</h3>
-            <button onClick={() => setShowPastSearches(!showPastSearches)}>
+            <button className="btn toggle-search" onClick={toggleShowPastSearches}>
               {showPastSearches ? "Hide Past Searches" : "Show Past Searches"}
             </button>
             {showPastSearches && (
-              <ul>
+              <ul data-aos="zoom-in">
                 {pastSearches.map((search, index) => (
-                  <li key={index}>
-                    {search}{" "}
-                    <button onClick={() => deletePastSearch(index)}>Delete</button>
+                  <li className="li-past-cont" key={index}>
+                    <div className="past-btn-cont">
+                      <button
+                        className="btn past-search-btn"
+                        onClick={() => performPastSearch(search)}
+                      >
+                        {search}
+                      </button>
+                    </div>
+                    <div className="past-del-cont">
+                      <button
+                        className="btn delete-past"
+                        onClick={() => deletePastSearch(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
+                {deleteMessage && (
+                  <p className="alert alert-primary mt-3">{deleteMessage}</p>
+                )}
               </ul>
             )}
           </div>
         )}
       </header>
-      {userInfo && <Profile query={userInfo} userRepos={userRepos} />}
+      {loading ? ( // Display a loading message when loading is true
+        <p className="text-center">Loading...</p>
+      ) : (
+        userInfo && <Profile query={userInfo} userRepos={userRepos} />
+      )}
     </div>
   );
 }
