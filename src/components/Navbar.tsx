@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import Aos from "aos";
 import Profile from "./Profile";
 import "aos/dist/aos.css";

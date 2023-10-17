@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import Repos from "./Repos";
 import Aos from "aos";
-
-export default function Profile({ query, userRepos }) {
+interface ProfileProps {
+    query:any|null,
+    userRepos:string[]
+}
+ const Profile:React.FC<ProfileProps>=({ query, userRepos })=> {
   useEffect(() => {
     Aos.init({ duration: 500 });
   }, []);
 
   function formatDate(dateString: string): string {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options:any = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
   return (
@@ -66,3 +69,5 @@ export default function Profile({ query, userRepos }) {
     </div>
   );
 }
+
+export default Profile

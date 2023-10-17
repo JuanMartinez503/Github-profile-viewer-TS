@@ -1,12 +1,15 @@
 import Aos from 'aos'
 import { useEffect } from 'react';
 
-export default function Repos({userRepos}) {
+interface ReposProps{
+    userRepos:any
+}
+const Repos:React.FC<ReposProps>=({userRepos})=> {
     useEffect(()=>{
         Aos.init({duration:300})
     },[])
     function formatDate(dateString: string) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const options:any = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     }
     return (
@@ -14,7 +17,7 @@ export default function Repos({userRepos}) {
             {userRepos.length>0 ? (
                 <div>
                         <h2 className="repos-title">Repositories</h2>
-            {userRepos.map((repo,i)=>(
+            {userRepos.map((repo:any,i:any)=>(
                 <div key={i} className="repos-container" data-aos="zoom-out">
                     <p className="last-update">Last Updated: {formatDate(repo.updated_at)}</p>
                     <a href={repo.html_url} target='_blank'>{repo.name}</a>
@@ -49,3 +52,4 @@ export default function Repos({userRepos}) {
         </div>
     )
 }
+export default Repos
