@@ -80,7 +80,6 @@ export default function Navbar() {
       <header>
         <div className="title-cont">
           <img src="/githublogo.png" alt="A logo for GitHub" />
-          <h2>Search for a profile</h2>
         </div>
         <form
           className="search"
@@ -91,7 +90,7 @@ export default function Navbar() {
         >
           <input
             type="text"
-            placeholder="Username..."
+            placeholder="Search for github username..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />

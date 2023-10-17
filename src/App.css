@@ -1,5 +1,4 @@
 
-
 :root {
   --red: #ff8844;
   --pink: #a0d3f2;
@@ -8,6 +7,7 @@
 }
 
 * {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   padding: 0;
   margin: 0;
 }
@@ -110,7 +110,7 @@ border-radius: 20px;
   color: white;
 }
 .profile-info button {
-  background-color: var(--tan);
+  background-color: var(--green);
   padding: .5%;
   pointer-events: none;
   margin-right: .5%;
@@ -134,6 +134,8 @@ border-radius: 20px;
   font-size: 1.5rem;
 }
 .repos-title {
+  text-shadow: 1px 1px 1px;
+  text-decoration: underline;
   text-align: center;
   font-size: 1.6rem;
 }
@@ -199,4 +201,54 @@ border-radius: 20px;
   padding: 1%;
   border-radius: 5px;
   margin-bottom: 2%;
+}
+@media screen and (max-width:991px){
+  .search input {
+    width: 80%
+    ;
+    margin-bottom: 1%;
+  }
+  .profile-container {
+    flex-direction: column;
+  }
+  .personal-info {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid black;
+
+  }
+  .personal-info img {
+    width: 50%;
+    margin: 2%;
+  }
+  .personal-info a {
+    margin-bottom: 2%;
+  }
+  .past-search-btn{
+    font-size: .6rem !important;
+    width: 6rem;
+  }
+  .delete-past{
+    font-size: .6rem !important;
+    width: 3rem;
+    margin-left: 2% !important;
+  }
+  .past-searches ul {
+width: 100%;
+}
+  .past-searches h3{
+    font-size: 1.5rem;
+  }
+  .profile-info p {
+    font-size: 1.2rem;
+  }
+  .repos-title {
+    font-size: 1.5rem;
+  }
+  .last-update{
+    font-size: .5rem !important;
+  }
+  .repos-container p {
+    font-size: 1rem;
+  }
 }

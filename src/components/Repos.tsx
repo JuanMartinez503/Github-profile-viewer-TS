@@ -17,7 +17,7 @@ export default function Repos({userRepos}) {
             {userRepos.map((repo,i)=>(
                 <div key={i} className="repos-container" data-aos="zoom-out">
                     <p className="last-update">Last Updated: {formatDate(repo.updated_at)}</p>
-                    <a href={repo.html_url}>{repo.name}</a>
+                    <a href={repo.html_url} target='_blank'>{repo.name}</a>
                     {repo.description ? (
                         <div>
                     <p>Description: {repo.description}</p>
